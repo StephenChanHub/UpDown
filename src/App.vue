@@ -35,6 +35,7 @@
             </nav>
         </div>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -44,10 +45,11 @@ const isSearchFocused = ref(false);
 const activeNav = ref('Explore');
 
 const navItems = ref([
-    { id: 1, title: 'Explore' },
-    { id: 2, title: 'Short' },
-    { id: 3, title: 'Store' },
-    { id: 4, title: 'Message' },
+  { id: 1, title: 'Explore' },
+  { id: 2, title: 'Short' },
+  { id: 3, title: 'Store' },
+  { id: 4, title: 'Message' },
+  { id: 5, title: 'Me' },
 ]);
 
 const pageDescriptions = {
@@ -210,69 +212,18 @@ const pageDescriptions = {
 }
 
 .nav-item {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 10px 14px;
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: transparent;
+  color: #7c7c82;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.nav-title {
-    margin-right: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #3A3A3C;
-    /* 深灰 */
-}
-
-.icon-placeholder {
-    width: 28px;
-    height: 28px;
-    background: #E5E5EA;
-    /* iOS 浅灰 */
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.icon-box {
-    width: 12px;
-    height: 12px;
-    border: 2px solid #8E8E93;
-    border-radius: 3px;
-}
-
-/* 交互状态：iOS 蓝色激活 */
-.nav-item:hover {
-    background: rgba(0, 0, 0, 0.03);
-}
-
-.nav-item.active .nav-title {
-    color: #007AFF;
-}
-
-.nav-item.active .icon-placeholder {
-    background: #007AFF;
-}
-
-.nav-item.active .icon-box {
-    border-color: #ffffff;
-}
-
-/* 主内容卡片 */
-.ios-content-card {
-    background: white;
-    width: 80%;
-    height: 70%;
-    border-radius: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+.nav-item.active {
+  color: #fff;
+  background: #007aff;
 }
 
 .ios-content-card h2 {
