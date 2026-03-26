@@ -1,29 +1,45 @@
 <template>
-    <div class="ios-app-container">
-        <div class="top-bar">
-            <div class="search-wrapper" :class="{ 'is-focused': isSearchFocused }">
-                <div class="search-icon-placeholder">🔍</div>
-                <input type="text" placeholder="搜索舞者、视频或课程..." @focus="isSearchFocused = true"
-                    @blur="isSearchFocused = false" />
-            </div>
+  <div class="app-shell">
+    <!-- 内容层 -->
+    <main class="content-layer">
+      <section class="feed-card" v-for="n in 6" :key="n">
+        <h3>Content Block {{ n }}</h3>
+        <p>这里是页面内容层，用于演示与悬浮组件的层级分离效果。</p>
+      </section>
+    </main>
 
-            <div class="user-profile-btn">
-                <div class="avatar-placeholder">User</div>
-            </div>
+    <!-- 悬浮层 -->
+    <div class="floating-layer">
+      <header class="floating-top">
+        <div class="search-box" :class="{ focused: isSearchFocused }">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            placeholder="Search"
+            @focus="isSearchFocused = true"
+            @blur="isSearchFocused = false"
+          />
         </div>
 
-        <nav class="side-nav-ios">
-            <div v-for="item in navItems" :key="item.id" class="nav-item"
-                :class="{ 'active': activeNav === item.title }" @click="activeNav = item.title">
-                <span class="nav-title">{{ item.title }}</span>
-                <div class="icon-placeholder">
-                    <div class="icon-box"></div>
-                </div>
-            </div>
-        </nav>
+        <button class="user-btn" type="button">User</button>
+      </header>
 
+      <button class="add-btn" type="button">＋</button>
 
+      <nav class="bottom-nav">
+        <button
+          v-for="item in navItems"
+          :key="item.id"
+          class="nav-item"
+          :class="{ active: activeNav === item.title }"
+          type="button"
+          @click="activeNav = item.title"
+        >
+          {{ item.title }}
+        </button>
+      </nav>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -33,179 +49,167 @@ const isSearchFocused = ref(false);
 const activeNav = ref('Explore');
 
 const navItems = ref([
-    { id: 1, title: 'Explore' },
-    { id: 2, title: 'Short' },
-    { id: 3, title: 'Store' },
-    { id: 4, title: 'Message' },
+  { id: 1, title: 'Explore' },
+  { id: 2, title: 'Short' },
+  { id: 3, title: 'Store' },
+  { id: 4, title: 'Message' },
+  { id: 5, title: 'Me' },
 ]);
 </script>
 
 <style scoped>
-/* 全局基础：iOS 浅灰色背景 */
-.ios-app-container {
-    width: 100vw;
-    height: 100vh;
-    background-color: #F2F2F7;
-    color: #000000;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-    overflow: hidden;
-    position: relative;
+.app-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #f2f2f7;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
 }
 
-/* --- 顶部区域布局 --- */
-.top-bar {
-    position: fixed;
-    top: 20px;
-    left: 30px;
-    right: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 100;
+/* 第一层：页面内容 */
+.content-layer {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  overflow-y: auto;
+  padding: 110px 20px 140px;
 }
 
-/* 搜索框：响应式蓝色效果 */
-.search-wrapper {
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 8px 16px;
-    border-radius: 12px;
-    width: 300px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
+.feed-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
 }
 
-.search-wrapper input {
-    background: transparent;
-    border: none;
-    outline: none;
-    margin-left: 10px;
-    width: 100%;
-    font-size: 15px;
-    color: #1C1C1E;
+.feed-card h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
 }
 
-/* 聚焦时的蓝色响应 */
-.search-wrapper.is-focused {
-    width: 350px;
-    background: rgba(255, 255, 255, 0.9);
-    border-color: #007AFF;
-    /* iOS Blue */
-    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+.feed-card p {
+  margin: 0;
+  color: #6c6c70;
+  font-size: 14px;
 }
 
-.search-wrapper.is-focused .search-icon-placeholder {
-    color: #007AFF;
+/* 第二层：悬浮组件层 */
+.floating-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
 }
 
-/* 个人头像 */
-.avatar-placeholder {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    font-size: 12px;
-    font-weight: 600;
-    color: #8E8E93;
-    cursor: pointer;
-    transition: transform 0.2s;
+.floating-top {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
 }
 
-.avatar-placeholder:active {
-    transform: scale(0.92);
+.search-box,
+.user-btn,
+.bottom-nav,
+.add-btn {
+  pointer-events: auto;
 }
 
-/* --- 右侧 iOS 导航栏 --- */
-.side-nav-ios {
-    position: fixed;
-    right: 25px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 15px 10px;
-    z-index: 99;
+.search-box {
+  flex: 1;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  transition: all 0.28s ease;
+}
 
-    /* iOS 玻璃质感 */
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border-radius: 24px;
-    border: 0.5px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+.search-box.focused {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(0, 122, 255, 0.2);
+  border-color: rgba(0, 122, 255, 0.25);
+}
+
+.search-icon {
+  opacity: 0.55;
+}
+
+.search-box input {
+  margin-left: 8px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+}
+
+.user-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.add-btn {
+  position: fixed;
+  bottom: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 54px;
+  height: 54px;
+  border: none;
+  border-radius: 50%;
+  font-size: 30px;
+  line-height: 1;
+  color: #fff;
+  background: linear-gradient(145deg, #1c8dff, #007aff);
+  box-shadow: 0 10px 26px rgba(0, 122, 255, 0.38);
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  padding: 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(255, 255, 255, 0.56);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.11);
 }
 
 .nav-item {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 10px 14px;
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: transparent;
+  color: #7c7c82;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.nav-title {
-    margin-right: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #3A3A3C;
-    /* 深灰 */
-}
-
-.icon-placeholder {
-    width: 28px;
-    height: 28px;
-    background: #E5E5EA;
-    /* iOS 浅灰 */
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.icon-box {
-    width: 12px;
-    height: 12px;
-    border: 2px solid #8E8E93;
-    border-radius: 3px;
-}
-
-/* 交互状态：iOS 蓝色激活 */
-.nav-item:hover {
-    background: rgba(0, 0, 0, 0.03);
-}
-
-.nav-item.active .nav-title {
-    color: #007AFF;
-}
-
-.nav-item.active .icon-placeholder {
-    background: #007AFF;
-}
-
-.nav-item.active .icon-box {
-    border-color: #ffffff;
-}
-
-/* 主内容卡片 */
-.ios-content-card {
-    background: white;
-    width: 80%;
-    height: 70%;
-    border-radius: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+.nav-item.active {
+  color: #fff;
+  background: #007aff;
 }
 </style>
