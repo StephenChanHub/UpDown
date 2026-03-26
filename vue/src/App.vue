@@ -45,6 +45,8 @@ const navItems = ref([
     { id: 2, title: 'Short' },
     { id: 3, title: 'Store' },
     { id: 4, title: 'Message' },
+    { id: 5, title: 'Me' },
+
 ]);
 
 const currentView = computed(() => {
