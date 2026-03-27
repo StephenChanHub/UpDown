@@ -73,7 +73,7 @@ const rightColumnPosts = computed(() => posts.value.filter((_, i) => i % 2 !== 0
 /* --- 瀑布流布局核心 --- */
 .waterfall-container {
     display: flex;
-    gap: 16px;
+    gap: 20px;
     /* 列间距 */
     align-items: flex-start;
     width: 100%;

@@ -100,7 +100,7 @@ const currentView = computed(() => {
 /* --- 顶部悬浮层布局 --- */
 .top-floating-layer {
     position: fixed;
-    top: 30px;
+    top: 20px;
     left: 0;
     width: 100%;
     height: 60px;
@@ -109,7 +109,7 @@ const currentView = computed(() => {
     justify-content: center;
     align-items: center;
     pointer-events: none;
-    /* 穿透层级：只有内部的岛屿可点，不产生“灰色 div”挡住内容 */
+  
 }
 
 .island-wrapper {
