@@ -1,14 +1,24 @@
 <template>
     <div class="ios-app-container">
-        <header class="top-floating-bar">
-            <div class="search-island" :class="{ 'is-focused': isSearchFocused }">
-                <span class="search-icon">🔍</span>
-                <input type="text" placeholder="search" @focus="isSearchFocused = true"
-                    @blur="isSearchFocused = false" />
+        <header class="top-floating-layer">
+            <div class="island-wrapper left">
+                <div class="glass-island avatar-btn">
+                    <span>User</span>
+                </div>
             </div>
 
-            <div class="user-island">
-                <div class="avatar-placeholder">User</div>
+            <div class="island-wrapper center">
+                <div class="glass-island search-bar" :class="{ 'is-focused': isSearchFocused }">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="search" @focus="isSearchFocused = true"
+                        @blur="isSearchFocused = false" />
+                </div>
+            </div>
+
+            <div class="island-wrapper right">
+                <div class="glass-island add-btn">
+                    <span class="add-icon">+</span>
+                </div>
             </div>
         </header>
 
@@ -18,13 +28,15 @@
             </transition>
         </main>
 
-        <nav class="bottom-floating-nav">
-            <div v-for="item in navItems" :key="item.id" class="nav-item"
-                :class="{ 'active': activeNav === item.title }" @click="activeNav = item.title">
-                <div class="nav-icon-wrapper">
-                    <div class="icon-dot"></div>
+        <nav class="bottom-floating-nav-layer">
+            <div class="glass-island nav-container">
+                <div v-for="item in navItems" :key="item.id" class="nav-item"
+                    :class="{ 'active': activeNav === item.title }" @click="activeNav = item.title">
+                    <div class="nav-icon-wrapper">
+                        <div class="icon-dot"></div>
+                    </div>
+                    <span class="nav-label">{{ item.title }}</span>
                 </div>
-                <span class="nav-label">{{ item.title }}</span>
             </div>
         </nav>
     </div>
@@ -36,6 +48,7 @@ import Explore from './views/Explore.vue';
 import Short from './views/Short.vue';
 import Store from './views/Store.vue';
 import Message from './views/Message.vue';
+import Me from './views/Me.vue';
 
 const isSearchFocused = ref(false);
 const activeNav = ref('Explore');
@@ -46,17 +59,17 @@ const navItems = ref([
     { id: 3, title: 'Store' },
     { id: 4, title: 'Message' },
     { id: 5, title: 'Me' },
-
 ]);
 
 const currentView = computed(() => {
-    const views = { Explore, Short, Store, Message };
+    // 确保 Me 页面也被正确映射
+    const views = { Explore, Short, Store, Message, Me };
     return views[activeNav.value];
 });
 </script>
 
 <style scoped>
-/* 全局基础 */
+/* 全局基础：iOS 系统背景色，无边框，无额外 div 阴影 */
 .ios-app-container {
     width: 100vw;
     height: 100vh;
@@ -65,48 +78,72 @@ const currentView = computed(() => {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
     overflow: hidden;
     position: relative;
+    margin: 0;
 }
 
-/* --- 核心优化：搜索框悬浮岛屿 --- */
-.top-floating-bar {
+/* --- 核心悬浮容器样式 (Glass Island) --- */
+/* 这里直接套用了你之前满意的导航栏容器参数 */
+.glass-island {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    border-radius: 35px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    pointer-events: auto;
+    /* 恢复点击 */
+}
+
+/* --- 顶部悬浮层布局 --- */
+.top-floating-layer {
     position: fixed;
     top: 30px;
     left: 0;
     width: 100%;
+    height: 60px;
+    z-index: 1000;
     display: flex;
     justify-content: center;
-    /* 搜索框水平居中 */
     align-items: center;
-    z-index: 1000;
     pointer-events: none;
-    /* 穿透容器，只点击内部岛屿 */
+    /* 穿透层级：只有内部的岛屿可点，不产生“灰色 div”挡住内容 */
 }
 
-.search-island {
-    pointer-events: auto;
+.island-wrapper {
+    position: absolute;
     display: flex;
     align-items: center;
-    width: 280px;
-    padding: 10px 18px;
-    /* 极致毛玻璃 */
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(25px) saturate(180%);
-    -webkit-backdrop-filter: blur(25px) saturate(180%);
-    /* 悬浮关键：圆角 + 细边框 + 弥散阴影 */
-    border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
-    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.search-island.is-focused {
-    width: 340px;
+.island-wrapper.left {
+    left: 30px;
+}
+
+.island-wrapper.center {
+    position: relative;
+}
+
+/* 搜索框居中 */
+.island-wrapper.right {
+    right: 30px;
+}
+
+/* 搜索岛屿细节 */
+.search-bar {
+    min-width: 280px;
+    padding: 8px 18px;
+}
+
+.search-bar.is-focused {
+    min-width: 340px;
     background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 15px 45px rgba(0, 122, 255, 0.15);
-    border-color: rgba(0, 122, 255, 0.3);
+    box-shadow: 0 15px 45px rgba(0, 122, 255, 0.12);
 }
 
-.search-island input {
+.search-bar input {
     background: transparent;
     border: none;
     outline: none;
@@ -115,57 +152,51 @@ const currentView = computed(() => {
     font-size: 15px;
 }
 
-.search-icon {
-    font-size: 16px;
-    opacity: 0.6;
-}
-
-/* 个人头像岛屿 */
-.user-island {
-    pointer-events: auto;
-    position: absolute;
-    right: 30px;
-}
-
-.avatar-placeholder {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(15px);
-    display: flex;
-    align-items: center;
+/* 用户与加号岛屿细节 */
+.avatar-btn,
+.add-btn {
+    width: 46px;
+    height: 46px;
     justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+}
+
+.avatar-btn span {
     font-size: 10px;
     font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.3s ease;
 }
 
-.avatar-placeholder:hover {
+.add-btn span {
+    font-size: 24px;
+    font-weight: 300;
+    color: #007AFF;
+}
+
+/* iOS 蓝色加号 */
+
+.avatar-btn:hover,
+.add-btn:hover {
     transform: scale(1.08);
-    /* 恢复轻微放大 */
 }
 
-/* --- 底部导航栏：严格保持原内部样式 --- */
-.bottom-floating-nav {
+/* --- 底部导航层布局 --- */
+.bottom-floating-nav-layer {
     position: fixed;
     bottom: 34px;
-    left: 50%;
-    transform: translateX(-50%);
-    min-width: 320px;
+    left: 0;
+    width: 100%;
     display: flex;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(30px) saturate(150%);
-    padding: 8px 12px;
-    border-radius: 35px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+    justify-content: center;
     z-index: 1000;
+    pointer-events: none;
 }
 
+.nav-container {
+    min-width: 320px;
+    padding: 8px 12px;
+}
+
+/* 导航项样式 (保持原样) */
 .nav-item {
     display: flex;
     flex-direction: column;
@@ -209,15 +240,14 @@ const currentView = computed(() => {
     color: #007AFF;
 }
 
-/* --- 动画与内容 --- */
+/* --- 主内容区 (全屏流动) --- */
 .main-content {
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    padding-top: 100px;
-    /* 为顶部悬浮留出空间 */
-    padding-bottom: 120px;
-    /* 为底部悬浮留出空间 */
+    /* 预留上下 padding，防止被岛屿遮挡第一行内容 */
+    padding: 10px 20px 20px 20px;
+    box-sizing: border-box;
 }
 
 .slide-vertical-enter-active,
