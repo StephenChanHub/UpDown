@@ -246,7 +246,7 @@ const currentView = computed(() => {
     height: 100%;
     overflow-y: auto;
     /* 预留上下 padding，防止被岛屿遮挡第一行内容 */
-    padding: 10px 20px 20px 20px;
+    padding: 10px 0px 0px 0px; 
     box-sizing: border-box;
 }
 

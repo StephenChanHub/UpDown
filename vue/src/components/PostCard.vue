@@ -136,10 +136,11 @@ const handleAction = (type) => {
 /* --- 2. 媒体内容区域样式 --- */
 .post-media-container {
     width: 100%;
+    height: 100%;
     border-radius: 12px;
     /* 内层元素圆角稍小 */
     overflow: hidden;
-    margin-bottom: 16px;
+    margin-bottom: 0px;
     background: #F2F2F7;
     border: 1px solid rgba(0, 0, 0, 0.05);
     box-sizing: border-box;
@@ -148,7 +149,7 @@ const handleAction = (type) => {
 .media-placeholder {
     width: 100%;
     /* 预设一个高度，例如 4:3 比例，你可以根据需要调整 */
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
     display: flex;
     flex-direction: column;
     align-items: center;

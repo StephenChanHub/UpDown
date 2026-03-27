@@ -5,11 +5,11 @@
 
         <div class="waterfall-container">
             <div class="waterfall-column">
-                <PostCard v-for="post in leftColumnPosts" :key="post.id" class="waterfall-item" />
+                <MainPostCard v-for="post in leftColumnPosts" :key="post.id" class="waterfall-item" />
             </div>
 
             <div class="waterfall-column">
-                <PostCard v-for="post in rightColumnPosts" :key="post.id" class="waterfall-item" />
+                <MainPostCard v-for="post in rightColumnPosts" :key="post.id" class="waterfall-item" />
             </div>
         </div>
     </div>
@@ -18,6 +18,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import PostCard from '../components/PostCard.vue';
+import MainPostCard from '../components/MainPostCard.vue';
 
 // 模拟数据：在实际项目中，这些数据将来自 API
 const posts = ref([
@@ -39,7 +40,7 @@ const rightColumnPosts = computed(() => posts.value.filter((_, i) => i % 2 !== 0
     height: 100%;
     /* 允许内部滚动 */
     overflow-y: auto;
-    padding: 20px;
+    padding: 0px;
     box-sizing: border-box;
     /* 隐藏滚动条 (可选，保持 iOS 洁净感) */
     -ms-overflow-style: none;
